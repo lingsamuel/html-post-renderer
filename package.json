@@ -1,0 +1,9 @@
+{
+  "name": "html-post-renderer",
+  "dependencies": {
+    "chalk": "^4.1.0",
+    "jquery": "^3.6.0",
+    "jsdom": "^16.5.0",
+    "puppeteer": "^8.0.0"
+  }
+}
