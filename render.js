@@ -6,7 +6,7 @@ const path = require('path');
 
 const jquery = require("jquery")
 const jsdom = require("jsdom")
-const {JSDOM} = jsdom;
+const { JSDOM } = jsdom;
 
 async function ssr(browser, url, replaceResource) {
     const page = await browser.newPage();
@@ -47,13 +47,29 @@ async function ssr(browser, url, replaceResource) {
     await page.goto(url, { waitUntil: 'networkidle0' });
     let html = await page.content();
 
-    let dom = new JSDOM(html)
-    let $ = jquery(dom.window)
-    $('[data-stage="prerender"]').each((i,el)=>{
-        el.remove()
-    })
-    html = dom.serialize();
+    let dom = new JSDOM(html);
+    let $ = jquery(dom.window);
 
+    // 移除预渲染脚本
+    $('[data-stage="prerender"]').each((i, el) => {
+        el.remove();
+    });
+
+    // 如果没有 katex，移除 katex css
+    if ($('.katex').length === 0) {
+        $('[data-dep="katex"]').each((i, el) => {
+            el.remove();
+        });
+    }
+
+    // 如果没有 figure 元素，移除 photoswipe
+    if($('figure').length === 0 && $('.pswp').length === 0) {
+        $('[data-dep="photoswipe"]').each((i, el) => {
+            el.remove();
+        });
+    }
+
+    html = dom.serialize();
     await page.close();
     return html;
 }
