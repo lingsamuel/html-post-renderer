@@ -63,7 +63,10 @@ async function ssr(browser, url, replaceResource) {
     }
 
     // 如果没有 figure 元素，移除 photoswipe
-    if($('figure').length === 0) {
+    if ($('figure').length === 0) {
+        $('.pswp').each((i, el) => {
+            el.remove();
+        });
         $('[data-dep="photoswipe"]').each((i, el) => {
             el.remove();
         });
